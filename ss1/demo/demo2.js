@@ -11,6 +11,9 @@ let arr2=[3,5,7]
 let arr3=[...arr1,...arr2]
 let[a,b,...c]=arr3
 console.log(c);
+let myClass = class {
+    name="Hao"
+}
 
 console.log(sum(1,2,3))
 const obj={
