@@ -22,6 +22,7 @@ class ToDoList extends Component {
 
     render() {
         const {todoList, textInput} = this.state;
+        // const textInput = "";
         return (
             <div style={{textAlign:'center', padding:30}}>
                 <h1>To do list</h1>
