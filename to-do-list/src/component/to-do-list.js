@@ -1,48 +1,63 @@
-import {Component} from "react";
+import { useEffect, useState} from "react";
+import * as todoService from "../../../to-do-list/src/service/TodoService";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-class ToDoList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            todoList: [],
-            textInput:""
+function ToDoList () {
+    const [todoList,setTodoList] = useState([])
+    const [textInput,setTextInput] = useState('')
+
+
+    useEffect (() => {
+        //     Call API search  name
+        getAllTodo()
+    },[])
+
+    const addBtnTodoList = async () => {
+        // setTodoList([textInput, ...todoList]);
+        // setTextInput('')
+        let isSuccess = await todoService.saveTodo(textInput)
+        setTextInput("")
+        if(isSuccess) {
+            alert("Thêm mới thành công")
+        } else {
+            alert("Thêm mới thất bại.")
         }
     }
 
-    addBtnTodoList = () => {
-        this.setState({
-            todoList : [this.state.textInput, ...this.state.todoList],
-            textInput: ""
-        })
+    const addTodo = (event) => {
+        setTextInput(event.target.value)
     }
 
-    addTodo = (event) => {
-        this.setState({textInput : event.target.value})
+    const getAllTodo = async () => {
+        try {
+            let res= await todoService.getAllTodo()
+            setTodoList(res);
+        } catch (e) {
+            console.log(e)
+        }
     }
-
-    render() {
-        const {todoList, textInput} = this.state;
-        // const textInput = "";
         return (
             <div style={{textAlign:'center', padding:30}}>
                 <h1>To do list</h1>
                 <input
                     type="text"
                     value={textInput}
-                    onChange={(e) => this.addTodo(e,textInput)}
+                    onChange={(e) => addTodo(e,textInput)}
+                    className='w-25 '
                     placeholder="Add Todo"/>
-                <button onClick={this.addBtnTodoList}>Add</button>
+                <span className=' p-3'>
+                <button className='btn btn-primary' disabled={!textInput} onClick={addBtnTodoList}>Add</button>
+                    </span>
                 {
-                    this.state.todoList.map((item) =>
-                        <div>
-                            {item}
+                    todoList.map((item) =>
+                        <div key={item.id}>
+                            {item.title}
                         </div>
                     )
                 }
 
             </div>
         )
-    }
 }
 
 export default ToDoList;
